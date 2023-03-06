@@ -63,18 +63,25 @@ def build_corpus(split, make_vocab=True, data_dir="../dataset/dxy"):
 
             #print(word_list,tag_list)
             with open(file_output,'a',encoding='utf-8') as output_f:
-                for w,t in zip(word_list,tag_list):
-                        #print(w+" "+t)
-                        if w != '	' and w != ' ':
+                sentence = []
+                sentence_tag = [] 
+                for w,t in zip(word_list,tag_list):              
+                        if w not in ['，', '.', '。', '！', '？', '!', '?', ','] and w != '	' and w != ' ':
                             output_f.write(w+" "+t+'\n')
-                            #output_f.write(w + " "+t)
+                            sentence.append(w)
+                            sentence_tag.append(t)
+                        elif w != '	' and w != ' ':
+                            output_f.write(w+" "+t+'\n')
+                            sentence.append(w)
+                            sentence_tag.append(t)
+                            word_lists.append(sentence)
+                            tag_lists.append(sentence_tag)
+                            sentence = []
+                            sentence_tag = []
                 output_f.write('\n')
 
-    #print(word_list)
-    word_lists.append(word_list)
-    tag_lists.append(tag_list)
-    #print(len(word_lists))
-    #print(len(tag_lists))
+    print(word_lists)
+    print(tag_lists)
     if make_vocab:
         word2id = build_map(word_lists)
         tag2id = build_map(tag_lists)
